@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harmonograph: Lissajious patterns in real life</title>
+  <script src="script.js" defer></script>
+  <link href="../css/global.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <h2> Harmonograph: Lissajious patterns in real life </h2>
+  <br>
+  <p>
+    We can produce lissajious patterns using a pendulum by varying its frequency along x and y (for example North-South
+    and East-West) directions.
+    As the frequency of pendulum is dependent on its length, we can have an experimental setup through which we can vary
+    frequency along different axes.
+    <br>
+    <a href="https://youtu.be/uPbzhxYTioM">Watch this video for full details of experiment</a>
+  </p>
+  <p>
+    Since in real world the amplitude of the pendulum keeps decreasing with time before the pendulum comes to stop, we
+    see variations of Lissajious patterns.
+    Play with the patterns by varying damping values and number of iterations(each iteration is one to and fro swing of
+    the pendulum).
+  </p>
+  <br>
+  <section>
+    <header>Ideal Lissajious pattern</header>
+    <hr>
+    <div class="content">
+      <div class="toolbar">
+        <div class="entry form-group row">
+          <label for="hrInputId" class="col-sm-3 col-form-label">Horizontal amplitude (<b>A</b>)</label>
+          <div class="col-sm-9">
+            <input id="hrInputId" class="form-range hrInput" type="range" min="0" max="100" value="100">
+            <span class="hrValue">100</span><span>%</span>
+          </div>
+        </div>
+        <div class="entry form-group row">
+          <label for="vrInputId" class="col-sm-3 col-form-label">Vertical amplitude (<b>B</b>)</label>
+          <div class="col-sm-9">
+            <input id="vrInputId" class="form-range vrInput" type="range" min="0" max="100" value="100">
+            <span class="vrValue">100</span><span>%</span>
+          </div>
+        </div>
+        <div class="entry form-group row">
+          <label for="hfInputId" class="col-sm-3 col-form-label">Horizontal frequency
+            (<b>&omega;<sub>1</sub></b>)</label>
+          <div class="col-sm-2">
+            <input id="hfInputId" class="form-control hfInput" type="number" min="1" max="50" value="2">
+          </div>
+        </div>
+        <div class="entry form-group row">
+          <label for="vfInputId" class="col-sm-3 col-form-label">Vertical frequency (<b>&omega;<sub>2</sub></b>)</label>
+          <div class="col-sm-2">
+            <input id="vfInputId" class="form-control vfInput" type="number" min="1" max="50" value="2.01">
+          </div>
+        </div>
+        <div class="entry form-group row">
+          <label for="pdInputId" class="col-sm-3 col-form-label">Phase difference (<b>&phi;</b>)</label>
+          <div class="col-sm-9">
+            <input id="pdInputId" class="form-range pdInput" type="range" min="0" max="360" value="90">
+            <span class="pdValue">90</span><span>&#176;</span>
+          </div>
+        </div>
+        <br>
+        <button type="submit" id="resultBtnLissajious" class="btn btn-primary" onclick="lissajiousHandler()">Show
+          result</button>
+      </div>
+      <canvas class="lissCanvas"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <header>Real world Lissajious pattern</header>
+    <hr>
+    <div class="content">
+      <div class="toolbar">
+        <div class="entry form-group row">
+          <label for="hdampInputId" class="col-form-label col-sm-3">Horizontal damping</label>
+          <div class="col-sm-2">
+            <input id="hdampInputId" class="form-control hdampInput" type="number" min="0" value="0.001">
+          </div>
+        </div>
+        <div class="entry form-group row">
+          <label for="vdampInputId" class="col-form-label col-sm-3">Vertical damping</label>
+          <div class="col-sm-2">
+            <input id="vdampInputId" class="form-control vdampInput" type="number" min="0" value="0.001">
+          </div>
+        </div>
+        <div class="entry form-group row">
+          <label for="iterInputId" class="col-form-label col-sm-3">Iterations</label>
+          <div class="col-sm-2">
+            <input id="iterInputId" class="form-control iterInput" type="number" min="0" value="100">
+          </div>
+        </div>
+        <div class="entry form-check">
+          <label for="animateId" class="form-check-label">Animate by varying phase difference</label>
+          <input id="animateId" name="animate" type="checkbox" class="form-check-input" checked>
+        </div>
+        <br>
+        <button type="submit" id="resultBtnHarmonograph" class="btn btn-primary" onclick="harmonographHandler()">Show
+          result</button>
+        <div class="spinner-border spinner-border-sm" role="status"></div>
+      </div>
+      <canvas class="harmonograph"></canvas>
+    </div>
+  </section>
+</body>
+
+</html>

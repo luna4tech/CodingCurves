@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lissajious curves</title>
+  <script src="script.js" defer></script>
+  <link href="../css/global.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <h2> Learn about Lissajious curves </h2>
+  <br>
+  <p>
+    A <b>circle</b> is formed by plotting sin and cos of values on the xy coordinates. Since the values of sin and cos
+    range between -1 and 1, we get a circle of radius of 1. Multiplying the values by a fixed value r gives a circle of
+    radius r.
+    <br>
+    <math>x = <b>r</b> cos &theta;</math><br>
+    <math>y = <b>r</b> sin &theta;</math>
+  </p>
+  <p>
+    An <b>ellipse</b> is formed by plotting the points like in circle but with different radius across x and y axes.
+    <br>
+    <math>x = <b>A</b> cos &theta;</math><br>
+    <math>y = <b>B</b> sin &theta;</math>
+  </p>
+  <p>
+    Above curves have a frequency of 1. By varying the frequency of the cos and sin waves in x and y directions, we see
+    interesting patterns which are called <b>Lissajious curves</b>. We already know that cos and sin are phase different
+    by 90 degrees. We can vary phase difference between the horizontal and vertical waves to see even more different
+    patterns. Below are the equations to represent these patterns.
+    <br>
+    <math>x = <b>A</b> sin (<b>&omega;<sub>1</sub></b> &theta;) + <b>&phi;</b></math> <br>
+    <math>y = <b>B</b> sin (<b>&omega;<sub>2</sub></b> &theta;)</math>
+  </p>
+  <br>
+  <section>
+    <header>Play with lissajious curves</header>
+    <hr>
+    <div class="content">
+      <div class="toolbar">
+        <div class="entry">
+          <label for="hrInputId" class="form-label">Horizontal amplitude (<b>A</b>)</label>
+          <input id="hrInputId" class="form-range hrInput" type="range" min="0" max="100" value="100">
+          <span class="hrValue">100</span><span>%</span>
+        </div>
+        <div class="entry">
+          <label for="vrInputId" class="form-label">Vertical amplitude (<b>B</b>)</label>
+          <input id="vrInputId" class="form-range vrInput" type="range" min="0" max="100" value="100">
+          <span class="vrValue">100</span><span>%</span>
+        </div>
+        <div class="entry">
+          <label for="hfInputId" class="form-label">Horizontal frequency (<b>&omega;<sub>1</sub></b>)</label>
+          <input id="hfInputId" class="form-range hfInput" type="range" min="1" max="50" value="1">
+          <span class="hfValue">1</span>
+        </div>
+        <div class="entry">
+          <label for="vfInputId" class="form-label">Vertical frequency (<b>&omega;<sub>2</sub></b>)</label>
+          <input id="vfInputId" class="form-range vfInput" type="range" min="1" max="50" value="1">
+          <span class="vfValue">1</span>
+        </div>
+        <div class="entry">
+          <label for="pdInputId" class="form-label">Phase difference (<b>&phi;</b>)</label>
+          <input id="pdInputId" class="form-range pdInput" type="range" min="0" max="360" value="0">
+          <span class="pdValue">0</span><span>&#176;</span>
+        </div>
+        <div class="entry form-check">
+          <label for="showWavesId" class="form-check-label">Show waves</label>
+          <input id="showWavesId" name="showWaves" type="checkbox" class="form-check-input" checked>
+        </div>
+      </div>
+      <canvas class="lissCanvas"></canvas>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="hWave">
+      <header>Horizontal sin wave</header>
+      <canvas class="hCanvas"></canvas>
+    </section>
+
+    <section class="vWave">
+      <header>Vertical sin wave</header>
+      <canvas class="vCanvas"></canvas>
+    </section>
+  </div>
+</body>
+
+</html>

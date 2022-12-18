@@ -1,0 +1,26 @@
+input[type="range"] {
+  width: 50%;
+  height: 10px;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar {
+  width: 60%;
+}
+
+.toolbar .entry {
+  margin-bottom: 5px;
+}
+
+.grid {
+  display: flex;
+  justify-content: space-between;
+}
+
+canvas {
+  border: 1px dotted gray;
+}
