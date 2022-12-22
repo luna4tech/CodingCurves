@@ -2,8 +2,6 @@ const circleCanvas = document.querySelector(".circleCanvas");
 const arcCanvas = document.querySelector(".arcCanvas");
 const ellipseCanvas = document.querySelector(".ellipseCanvas");
 
-const BG_COLOR = 'rgb(255,255,255)';
-const REF_COLOR = 'rgba(0, 255, 255, 0.2)';
 const GRADIENT1 = [195, 55, 100];
 const GRADIENT2 = [29, 38, 113];
 
@@ -24,6 +22,7 @@ var HR, VR, erotation;
 const eCtx = ellipseCanvas.getContext("2d");
 const eWidth = ellipseCanvas.width = window.innerWidth * 0.45;
 const eHeight = ellipseCanvas.height = Math.min(eWidth, window.innerHeight - 30);
+
 
 circleHandler();
 arcHandler();
@@ -129,135 +128,46 @@ function setValue(measure, value) {
     }
 }
 
-// draw functions
+function clearCanvas(ctx, width, height) {
+    drawRect(ctx, new Point(-width / 2, -height / 2), width, height, BG_COLOR, true);
+}
+
+function drawRefLines(ctx, width, height) {
+    drawLine(ctx, new Point(-width / 2, 0), new Point(width / 2, 0), REF_COLOR);
+    drawLine(ctx, new Point(0, -height/2), new Point(0, height/2), REF_COLOR);
+}
+
 function clearAndDrawConcentricCircles(ctx, width, height, sides, number, rotation) {
-    clearCanvas(ctx, width, height, BG_COLOR);
-    drawConcentricCircles(ctx, width, height, sides, number, rotation);
-}
-
-function clearAndDrawArc(ctx, width, height, start, end, radius, type) {
-    clearCanvas(ctx, width, height, BG_COLOR);
-    drawArc(ctx, width, height, start, end, radius, type);
-}
-
-function clearAndDrawEllipse(ctx, width, height, hr, vr, rotation) {
-    clearCanvas(ctx, width, height, BG_COLOR);
-    drawEllipse(ctx, width, height, hr, vr, rotation);
-}
-
-function clearCanvas(ctx, width, height, color) {
-    ctx.fillStyle = color;
-    ctx.fillRect(-width / 2, -height / 2, width, height);
-}
-
-function drawConcentricCircles(ctx, cWidth, cHeight, sides, number, rotation) {
+    clearCanvas(ctx, width, height);
+    
     let maxRadius = Math.min(cWidth, cHeight) / 2 - 10;
 
     // drawing polygons from center to max size
     for (let radius = 0; radius <= maxRadius; radius += maxRadius / number) {
-        circle(ctx, 0, 0, sides, radius, degToRad(rotation) * radius / maxRadius);
-
-        ctx.strokeStyle = getGradientColor(GRADIENT1, GRADIENT2, radius / maxRadius);
-        ctx.stroke();
+        let color = getGradientColor(GRADIENT1, GRADIENT2, radius / maxRadius);
+        let rotationInRad = degToRad(rotation) * radius / maxRadius;
+        drawPolygon(ctx, new Point(0,0), radius, sides, rotationInRad, color);
     }
 }
 
-function drawEllipse(ctx, width, height, hr, vr, rotation) {
-    drawRefLine(ctx, width, REF_COLOR);
-    drawVerticalLine(ctx, height, REF_COLOR);
+function clearAndDrawArc(ctx, width, height, start, end, radius, type) {
+    clearCanvas(ctx, width, height);
+    drawRefLines(ctx, width, height);
 
-    ellipse(ctx, 0, 0, 100, (width / 2) * hr / 100, (height / 2) * vr / 100, degToRad(rotation));
-
-    ctx.strokeStyle = 'rgb(255,0,0)';
-    ctx.stroke();
+    let radiusInPx = (radius / 100) * (Math.min(cWidth, cHeight) / 2 - 10);
+    drawArc(ctx, new Point(0,0), start, end, radiusInPx, type, CURVE_COLOR);
 }
 
-function drawArc(ctx, cWidth, cHeight, start, end, radius, type) {
-    drawRefLine(ctx, cWidth, REF_COLOR);
-    drawVerticalLine(ctx, cHeight, REF_COLOR);
+function clearAndDrawEllipse(ctx, width, height, hr, vr, rotation) {
+    clearCanvas(ctx, width, height);
+    drawRefLines(ctx, width, height);
 
-    let radiusComputed = (radius / 100) * (Math.min(cWidth, cHeight) / 2 - 10);
-    arc(ctx, 0, 0, start, end, radiusComputed, type);
-
-    ctx.strokeStyle = `rgb(255, 0, 0)`;
-    ctx.stroke();
-}
-
-function drawRefLine(ctx, cWidth, color) {
-    ctx.beginPath();
-    ctx.moveTo(-cWidth / 2, 0);
-    ctx.lineTo(cWidth / 2, 0);
-    ctx.strokeStyle = color;
-    ctx.stroke();
-    ctx.closePath();
-}
-
-function drawVerticalLine(ctx, cHeight, color) {
-    ctx.beginPath();
-    ctx.moveTo(0, -cHeight/2);
-    ctx.lineTo(0, cHeight/2);
-    ctx.strokeStyle = color;
-    ctx.stroke();
-    ctx.closePath();
-}
-// curves functions
-function ellipse(ctx, originX, originY, sides, hr, vr, rotation) {
-    ctx.beginPath();
-
-    // drawing one polygon/circle
-    for (let t = 0; t <= 2 * Math.PI; t += 2 * Math.PI / sides) {
-        // we get these formulas by applying rotation transformation matrix to hr*cos(t), vr*sin(t)
-        // rotation matrix is derived by finding where i and j lands after rotation
-        // i ==> (cos rot, sin rot), j ==> (-sin rot, cos rot)
-        x = originX + Math.cos(t) * Math.cos(rotation) * hr - Math.sin(t) * Math.sin(rotation) * vr;
-        y = originY + Math.sin(t) * Math.cos(rotation) * vr + Math.cos(t) * Math.sin(rotation) * hr;
-        ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-}
-
-function circle(ctx, originX, originY, sides, radius, rotation) {
-    ellipse(ctx, originX, originY, sides, radius, radius, rotation);
-}
-
-function arc(ctx, originX, originY, start, end, radius, type) {
-    if (end < start) {
-        let temp = start;
-        start = end;
-        end = temp;
-    }
-    ctx.beginPath();
-
-    let startX = originX + Math.cos(degToRad(start)) * radius;
-    let startY = originY + Math.sin(degToRad(start)) * radius;
-
-    if (type == "segment") {
-        ctx.moveTo(startX, startY);
-    }
-    if (type == "sector") {
-        ctx.moveTo(originX, originY);
-        ctx.lineTo(startX, startY);
-    }
-
-    // drawing arc
-    for (let t = degToRad(start); t <= degToRad(end); t += 0.01) {
-        let x = originX + Math.cos(t) * radius;
-        let y = originY + Math.sin(t) * radius;
-        ctx.lineTo(x, y);
-    }
-    if (type == "sector") {
-        ctx.lineTo(originX, originY);
-    }
-    if (type == "segment") {
-        ctx.closePath();
-    }
+    let hrInPx = (width / 2) * hr / 100;
+    let vrInPx = (height / 2) * vr / 100;
+    drawEllipse(ctx, new Point(0, 0), hrInPx, vrInPx, degToRad(rotation), CURVE_COLOR);
 }
 
 // utility functions
-function degToRad(degrees) {
-    return degrees * Math.PI / 180;
-}
-
 function getGradientColor(gradient1, gradient2, step) {
     let red = gradient1[0] + Math.floor((gradient2[0] - gradient1[0]) * step);
     let green = gradient1[1] + Math.floor((gradient2[1] - gradient1[1]) * step);

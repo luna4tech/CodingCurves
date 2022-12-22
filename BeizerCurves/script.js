@@ -1,22 +1,5 @@
 const beizerCanvas = document.querySelector(".beizerCanvas");
 
-const BG_COLOR = 'white';
-const CURVE_COLOR = 'red';
-const POINTS_COLOR = 'blue';
-const REF_COLOR = `rgba(0,180,180,0.3)`;
-const REF_COLOR2 = `rgba(200,200,0,0.3)`;
-const POINT_RADIUS = 3;
-
-class Point {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-    equalsPoint(other) {
-        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2)) <= POINT_RADIUS;
-    }
-}
-
 const CTX = beizerCanvas.getContext("2d");
 const HEIGHT = beizerCanvas.height = window.innerHeight * 0.8;
 const WIDTH = beizerCanvas.width = HEIGHT;
@@ -108,7 +91,7 @@ function drawBeizerCurve(ctx, points) {
             // draw reference lines
             if (showRefLines) {
                 referenceLines(ctx, pointsList.pA_list, pointsList.pB_list);
-                ctx.strokeStyle = REF_COLOR;
+                ctx.strokeStyle = REF_COLOR1;
                 ctx.stroke();
             }
             break;
@@ -126,7 +109,7 @@ function drawBeizerCurve(ctx, points) {
                 referenceLines(ctx, cubicPointsList.pB_list, cubicPointsList.pC_list);
                 ctx.stroke();
 
-                ctx.strokeStyle = REF_COLOR;
+                ctx.strokeStyle = REF_COLOR1;
                 referenceLines(ctx, cubicPointsList.pAB_list, cubicPointsList.pBC_list);
                 ctx.stroke();
             }
@@ -135,31 +118,16 @@ function drawBeizerCurve(ctx, points) {
 }
 
 function clearCanvas(ctx, width, height) {
-    ctx.fillStyle = BG_COLOR;
-    ctx.fillRect(0, 0, width, height);
+    drawRect(ctx, new Point(0,0), width, height, BG_COLOR);
 }
 
 function drawAllInputPoints(ctx, points) {
     points.forEach(point => {
-        circle(ctx, point.x, point.y, POINT_RADIUS);
-        ctx.fillStyle = POINTS_COLOR;
-        ctx.fill();
+        drawCircle(ctx, point, POINT_SIZE, POINT_COLOR, true);
     });
 }
 
 // curves functions
-function circle(ctx, originX, originY, radius) {
-    ctx.beginPath();
-
-    // drawing one polygon/circle
-    for (let t = 0; t <= 2 * Math.PI; t += 0.5) {
-        x = originX + radius * Math.cos(t);
-        y = originY + radius * Math.sin(t);
-        ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-}
-
 function quadraticBeizerCurve(ctx, p0, p1, p2, res = 0.1) {
     ctx.beginPath();
     ctx.moveTo(p0.x, p0.y);
@@ -238,10 +206,6 @@ function referenceLines(CTX, startPointsList, endPointsList) {
 }
 
 // utility functions
-function degToRad(degrees) {
-    return degrees * Math.PI / 180;
-}
-
 function getCursorPosition(canvas, event) {
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left

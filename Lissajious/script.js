@@ -2,9 +2,6 @@ const lissCanvas = document.querySelector(".lissCanvas");
 const hCanvas = document.querySelector(".hCanvas");
 const vCanvas = document.querySelector(".vCanvas");
 
-const BG_COLOR = 'rgb(255,255,255)';
-const CURVE_COLOR = 'rgb(255,0,0)';
-const REF_COLOR = 'rgba(0, 255, 255, 0.2)';
 const LISS_RES = 0.003;
 const WAVE_RES = 0.5;
 
@@ -94,16 +91,15 @@ function clearAndDrawLissajiousCurves() {
     // draw corresponding waves 
     clearCanvas(HW_CTX, HW_WIDTH, HW_HEIGHT);
     drawRefLines(HW_CTX, HW_WIDTH, HW_HEIGHT);
-    drawWave(HW_CTX, HW_WIDTH, HW_HEIGHT, HR, HF, PD);
+    drawTrig(HW_CTX, HW_WIDTH, HW_HEIGHT, HR, HF, CURVE_COLOR, Math.sin, PD);
 
     clearCanvas(VW_CTX, VW_WIDTH, VW_HEIGHT);
     drawRefLines(VW_CTX, VW_WIDTH, VW_HEIGHT);
-    drawWave(VW_CTX, VW_WIDTH, VW_HEIGHT, VR, VF, 0);
+    drawTrig(VW_CTX, VW_WIDTH, VW_HEIGHT, VR, VF, CURVE_COLOR, Math.sin, 0);
 }
 
 function clearCanvas(ctx, width, height) {
-    ctx.fillStyle = BG_COLOR;
-    ctx.fillRect(-width / 2, -height / 2, width, height);
+    drawRect(ctx, new Point(-width/2, -height/2), width, height, BG_COLOR);
 }
 
 function drawLissajiousCurves(ctx, hr, vr, hf, vf, pd) {
@@ -114,28 +110,8 @@ function drawLissajiousCurves(ctx, hr, vr, hf, vf, pd) {
 }
 
 function drawRefLines(ctx, cWidth, cHeight) {
-    ctx.beginPath();
-    ctx.moveTo(-cWidth / 2, 0);
-    ctx.lineTo(cWidth / 2, 0);
-    ctx.strokeStyle = REF_COLOR;
-    ctx.stroke();
-
-    ctx.moveTo(0, -cHeight / 2);
-    ctx.lineTo(0, cHeight / 2);
-    ctx.strokeStyle = REF_COLOR;
-    ctx.stroke();
-}
-
-function drawWave(ctx, cWidth, cHeight, amplitude, frequency, pd) {
-    ctx.beginPath();
-    ctx.strokeStyle = CURVE_COLOR;
-    let ampHeight = (amplitude / 100) * cHeight / 2; // amplitude is in %. ampHeight is relative to height of canvas.
-    for (let x = -cWidth / 2; x < cWidth / 2; x += WAVE_RES) {
-        let t = (x / cWidth) * 2 * Math.PI;
-        y = Math.sin(frequency * t + degToRad(pd)) * ampHeight;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-    }
+    drawLine(ctx, new Point(-cWidth/2, 0), new Point(cWidth/2, 0), REF_COLOR);
+    drawLine(ctx, new Point(-cHeight/2, 0), new Point(cHeight/2, 0), REF_COLOR);
 }
 
 // curves functions
@@ -148,9 +124,4 @@ function lissajiousCurve(ctx, originX, originY, hr, vr, hf, vf, pd) {
         ctx.lineTo(x, y);
     }
     ctx.closePath();
-}
-
-// utility functions
-function degToRad(degrees) {
-    return degrees * Math.PI / 180;
 }

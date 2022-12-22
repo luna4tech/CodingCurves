@@ -1,10 +1,8 @@
 const lissCanvas = document.querySelector(".lissCanvas");
 
-const BG_COLOR = 'rgb(255,255,255)';
-
 // Parameters
 let HR, VR, HF, VF, PD, SPEED;
-let ballRadius = 10;
+const BALL_RADIUS = 10;
 
 listenToInput('hr');
 listenToInput('vr');
@@ -61,30 +59,18 @@ lissAnimation();
 
 function lissAnimation() {
     clearCanvas(CTX, WIDTH, HEIGHT);
-    let r = WIDTH / 2 - ballRadius;
-    circle(CTX, (HR / 100) * r * Math.sin(HF * t + degToRad(PD)), (VR / 100) * r * Math.sin(VF * t), ballRadius);
-    CTX.fillStyle = 'rgb(0,0,0)';
-    CTX.fill()
+    let r = WIDTH / 2 - BALL_RADIUS;
+
+    let originX = (HR / 100) * r * Math.sin(HF * t + degToRad(PD));
+    let originY = (VR / 100) * r * Math.sin(VF * t);
+    drawCircle(CTX, new Point(originX, originY), BALL_RADIUS, POINT_COLOR, true);
+
     t += SPEED/HF;
     requestAnimationFrame(lissAnimation)
 }
 
 function clearCanvas(ctx, width, height) {
-    ctx.fillStyle = BG_COLOR;
-    ctx.fillRect(-width / 2, -height / 2, width, height);
-}
-
-// curves functions
-function circle(ctx, originX, originY, radius) {
-    ctx.beginPath();
-
-    // drawing one polygon/circle
-    for (let t = 0; t <= 2 * Math.PI; t += 4 / radius) {
-        x = originX + radius * Math.cos(t);
-        y = originY + radius * Math.sin(t);
-        ctx.lineTo(x, y);
-    }
-    ctx.closePath();
+    drawRect(ctx, new Point(-width/2, -height/2), width, height, BG_COLOR);
 }
 
 function lissajiousCurve(ctx, originX, originY, hr, vr, hf, vf, pd) {
@@ -96,9 +82,4 @@ function lissajiousCurve(ctx, originX, originY, hr, vr, hf, vf, pd) {
         ctx.lineTo(x, y);
     }
     ctx.closePath();
-}
-
-// utility functions
-function degToRad(degrees) {
-    return degrees * Math.PI / 180;
 }

@@ -1,9 +1,6 @@
 const beizerCanvas = document.querySelector(".lissCanvas");
 const harmoCanvas = document.querySelector(".harmonograph");
 
-const BG_COLOR = 'rgb(255,255,255)';
-const CURVE_COLOR = 'rgb(255,0,0)';
-const REF_COLOR = 'rgba(0, 255, 255, 0.2)';
 const LISS_RES = 0.003;
 
 // user inputs for lissajious curves
@@ -131,8 +128,7 @@ function clearAndDrawHarmonograph() {
 }
 
 function clearCanvas(ctx, width, height) {
-    ctx.fillStyle = BG_COLOR;
-    ctx.fillRect(-width / 2, -height / 2, width, height);
+    drawRect(ctx, new Point(-width / 2, -height / 2), width, height, BG_COLOR);
 }
 
 function drawLissajiousCurves(ctx, hr, vr, hf, vf, pd, hdamp = 0, vdamp = 0, iter = 1) {
@@ -167,9 +163,4 @@ function lissajiousCurve(ctx, originX, originY, hr, vr, hf, vf, pd, hdamp = 0, v
         }
     }
     ctx.closePath();
-}
-
-// utility functions
-function degToRad(degrees) {
-    return degrees * Math.PI / 180;
 }
